@@ -1,15 +1,13 @@
 #!/bin/bash
-BASE_URL='YOUR_APP_URL'
 RESPONSE_STATUS_URL='200'
+TELEGRAM_TOKEN='[TOKEN]'
+TELEGRAM_CHAT_ID='[CHAT ID]'
 
-TELEGRAM_TOKEN='YOUR_TELEGRAM_TOKEN'
-TELEGRAM_CHAT_ID='YOUR_TELEGRAM_CHAT_ID'
 
-
-getMicroserviceHealthCheck() {
-	for ListService in $(cat microservice-list);
+getServiceHealthCheck() {
+	for ListService in $(cat service-list);
 	do
-		RESPONSE_HEALTHCHECK=`curl -s -I -X GET $BASE_URL/$ListService | grep HTTP | awk '{ print $2 }'`
+		RESPONSE_HEALTHCHECK=`curl -s -I -X GET $ListService | grep HTTP | awk '{ print $2 }'`
 	
 		if [[ "$RESPONSE_HEALTHCHECK" != "$RESPONSE_STATUS_URL" ]]
 		then
@@ -23,7 +21,7 @@ getMicroserviceHealthCheck() {
 
 while [ 1 ]
 do
-	getMicroserviceHealthCheck
+	getServiceHealthCheck
 	sleep 30s
 done
 
